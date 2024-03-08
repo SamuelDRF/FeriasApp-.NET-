@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @if (@User.Identity?.Name != "admin@tech.unipartner.com")
+    {
+        <br/>
+        <br />
+            <br/>
+        <div class="text-center">
+            <h1><b>Hello @User.Identity?.Name!!</b> </h1>
+            <br />
+            <br />
+            <br />
+            <p>
+                If you have not marked your vacation yet, you can go directly to:
+                <a href="Infoes/Create" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                    Create New
+                </a>
+            </p>
+        </div>
+        <br />
+        <br/>
+            <br/>
+        <div class="text-center">
+            <p>
+                If you have already marked your vacation and want to see the status you can go to:
+                <a href="Infoes" class="btn btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                    </svg>
+                    Information
+                </a>
+            </p>
+        </div>
+        <div class="text-center buttonsmallmargin">
+            <iframe src="https://calendar.google.com/calendar/embed?height=720&wkst=1&bgcolor=%23ffffff&ctz=Europe%2FLisbon&showTitle=0&showNav=1&showCalendars=0&showPrint=0&showTabs=0&showTz=1&showDate=0&src=aHQzamxmYWFjNWxmZDYyNjN1bGZoNHRxbDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZXMucG9ydHVndWVzZSNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23B39DDB&color=%230B8043" style="border:solid 1px #777" width="720" height="720" frameborder="0" scrolling="no"></iframe>
+        </div>
+            }
+    else
+    {
+        
+    }
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">
+            <b>
+                Welcome
+            </b> 
+        </h1>
+        <p>
+            How to book your vacation?
+        </p>
+
+    </div>
+    <ul class="instructions">
+        <li> Register on the page, if you already have an account, login with your account</li>
+        <li>
+            in the top bar select "Info" or 
+            <a class="text-dark resalt" asp-area="" asp-controller="Infoes" asp-action="Index">
+                Click here to choose the vacation days
+            </a>
+        </li>
+        <li>touch the blue button that appears in the upper left corner</li>
+        <li>fill out the form and wait for a response</li>
+        <li>If you already have a vacation request, it will appear in the "Info" section</li>
+
+
+    </ul>
+}

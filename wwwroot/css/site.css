@@ -1,0 +1,343 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color:ghostwhite;
+}
+
+/*margins*/
+.margintop{
+    margin-top:1%;
+}
+
+.buttonsmallmargin {
+    margin-top: 3%;
+}
+/*Status*/
+.confirmed{
+    background-color:lightgreen;
+    border-radius: 5px;
+    padding:10%;
+    display:flex;
+    align-content:center;
+    align-items:center;
+    justify-content:center;
+}
+.denied {
+    background-color: lightcoral;
+    border-radius: 5px;
+    padding:10%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+.waiting {
+    background-color: lightgoldenrodyellow;
+    border-radius: 5px;
+    padding: 10%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+.note {
+    background-color: lightskyblue;
+    border-radius: 5px;
+    padding: 10%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+/*Efecito com :hover*/
+.resalt:hover {
+    border-radius:10px;
+    background-color: lightcyan
+}
+.login:hover {
+    border-radius: 10px;
+    background-color: lightgreen
+}
+.register:hover {
+    border-radius: 10px;
+    background-color: lightblue
+}
+.logout:hover {
+    border-radius: 10px;
+    background-color: lightsalmon
+}
+
+/*Search e Input*/
+.search {
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+    text-align: center;
+}
+.searchbar{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+}
+
+.biginput {
+    width: 207%;
+    height: 200%
+}
+
+/*Pagina de detalhes*/
+.status {
+    background-color: darkgreen;
+    color: white;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    border-style: hidden;
+    border-color: darkblue;
+    border-radius: 10px;
+}
+
+.status2 {
+    background-color: darkred;
+    color: white;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    border-style: hidden;
+    border-color: darkblue;
+    border-radius: 10px;
+}
+
+.status3 {
+    -webkit-animation: random 1s infinite;
+    animation: random 1s infinite;
+    color: darkblue;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    border-style: hidden;
+    border-color: darkblue;
+    border-radius: 10px;
+}
+@keyframes random {
+    0% {
+        background-color: #ffbc31;
+    }
+    40% {
+        background-color: #e2ff00;
+    }
+    60% {
+        background-color: #e2ff00;
+    }
+    100% {
+        background-color: #ffbc31;
+    }
+}
+
+.status4 {
+    background-color: darkblue;
+    color: white;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    border-style: hidden;
+    border-color: darkblue;
+    border-radius: 10px;
+}
+
+.detailnote {
+    background-color: #0d669d;
+    color: ghostwhite;
+    padding: 1%;
+    border-radius: 15px;
+    box-shadow: 0px 0px 5px #789833
+}
+
+
+/*Footer e Conteudo*/
+.background {
+    background-color: white
+}
+
+.logo {
+    width: 200px;
+    margin-left: 50px;
+}
+
+.foot{
+    display:flex;
+    flex-direction:row;
+}
+.footinfo{
+    margin-top:50px;
+    margin-left:50px;
+    margin-right:50px;
+    display:flex;
+    flex-direction:column;
+    color:grey
+}
+
+.infop{
+    display:flex
+}
+
+.info {
+    background-color: white;
+    padding: 1%;
+    border-radius: 50px;
+    margin-bottom: 300px;
+}
+
+.monocromo {
+    filter: brightness(0%);
+}
+
+.instructions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    padding: 5%;
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: white;
+    border-radius: 30px;
+}
+
+    .instructions:hover {
+        background-color: ghostwhite
+    }
+
+.admin{
+    background-color:ghostwhite;
+    padding:1%;
+    border-style:solid;
+    border-color:azure;
+    border-radius:10px
+
+}
+
+.namedates {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 400px;
+}
+
+.namedatesuser {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align:left;
+    max-width:500px;
+    min-height:130px
+}
+
+.topindex{
+    display:flex;
+    justify-content:space-around;
+    align-items:baseline;
+    margin:3%;
+}
+
+.toptable {
+    text-align:center
+}
+
+.filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 5%;
+    margin-bottom: 2%;
+}
+
+.filterselector{
+    max-width:15%;
+    font-size:small
+}
+
+.atention{
+    -webkit-animation: atention 1s infinite;
+    animation: atention 1s infinite;
+}
+
+@keyframes atention {
+    0% {
+        background-color: #0d669d;
+    }
+
+    40% {
+        background-color: #0d6efd;
+    }
+
+    60% {
+        background-color: #0d6efd;
+    }
+
+    100% {
+        background-color: #0d669d;
+    }
+}
+
+.invisibleinput:read-only {
+    margin-top: 7%;
+    background-color: white;
+    -webkit-animation: lookAtMe 1s infinite;
+    animation: lookAtMe 1s infinite;
+    font-weight: bold;
+    font-size:large;
+    border-color: white
+}
+.invisibleinput:read-only:hover{
+    cursor:default;
+}
+
+@keyframes lookAtMe {
+    0% {
+        color: white;
+    }
+
+    35% {
+        color: #ff0000;
+    }
+
+    65% {
+        color: #ff0000;
+    }
+
+    100% {
+        color: white;
+    }
+}
+
+
+
+
+
+
+

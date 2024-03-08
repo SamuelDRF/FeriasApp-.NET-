@@ -1,0 +1,232 @@
+﻿@model FeriasApp.Models.Info
+
+@{
+    ViewData["Title"] = "Create";
+}
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" value="@User.Identity?.Name" readonly />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Chosen dates</label>
+                <input asp-for="Requested" class="form-control biginput" readonly id="date">
+                <span asp-validation-for="Requested" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Confirmed" class="control-label"></label>
+                <input asp-for="Confirmed" class="form-control biginput" value="waiting confirmation" readonly />
+                <span asp-validation-for="Confirmed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zone" class="control-label"></label>
+                <select asp-for="Zone" class="form-control biginput" id="zone">
+                    <option value="Madeira">Madeira</option>
+                    <option value="Lisboa">Lisboa</option>
+                </select>
+                <span asp-validation-for="Zone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Available days</label>
+                <input asp-for="Days" class="form-control" readonly id="days" type="number"/>
+                <span asp-validation-for="Days" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary buttonsmallmargin margintop" />
+            </div>
+
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="Requested" class="control-label">Day selector</label>
+            <input class="form-control" type="date" id="selector">
+            <span asp-validation-for="Requested" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-md-4 margintop">
+        <div class="buttonsmallmargin">
+            <button onclick="add()" class="btn btn-success">Add</button>
+            <button onclick="edit()" class="btn btn-warning">Delete last</button>
+            <button onclick="del()" class="btn btn-danger">Delete all</button>
+        </div>
+        <div class="form-group buttonsmallmargin">
+            <input class="form-control invisibleinput" readonly id="lookAtMe">
+        </div>
+    </div>
+</div>
+    <div>
+        <a asp-action="Index" class="btn btn-danger margintop">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z" />
+            </svg>
+            Back to List
+        </a>
+    </div>
+    <button onclick="toggleDiv()" class="btn btn-outline-secondary margintop">Calendar</button>
+    <div id="miDiv" style="display: none;">
+        <div class="topindex">
+            <iframe src="https://calendar.google.com/calendar/embed?height=400&wkst=1&bgcolor=%233F51B5&ctz=Europe%2FLisbon&showTz=1&showTitle=0&showNav=1&showPrint=1&showTabs=1&showCalendars=0&hl=en_GB&src=aHQzamxmYWFjNWxmZDYyNjN1bGZoNHRxbDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZXMucG9ydHVndWVzZSNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23B39DDB&color=%230B8043" style="border-radius:10px; color:white" width="900" height="400" frameborder="100" scrolling="no"></iframe>
+        </div>
+    </div>
+
+
+
+
+<script>
+    debugger;
+    //data  de hoje
+    var dataActual = new Date();//...........................................data sem formata
+    var year = dataActual.getFullYear();//...................................ano
+    var month = (dataActual.getMonth() + 1).toString().padStart(2, "0");//...mes
+    var day = dataActual.getDate().toString().padStart(2, "0");//............dia
+    var today = year + "-" + month + "-" + day;//............................data formato yyyy-mm-dd
+    //string onde se guardam as datas
+    const date = document.getElementById("date");//..........................input string
+    document.getElementById("days").value = 22;
+    var days = document.getElementById("days");//............................dias disponiveis
+    var array = [];//........................................................dia repetido
+    
+    //array com os festivos até 2030 (a ideia seria guarda-los numa Db ou usar um API)
+    const festivosPortugalFunchal = [ //Feriado municipal em Funchal (Madeira), Portugal. Dia de elevação a cidade. 08-21 || O Dia da Madeira 07-01
+        "2023-01-01", "2023-04-25", "2023-05-01", "2023-06-10", "2023-07-01", "2023-08-15", "2023-08-21", "2023-10-05", "2023-11-01", "2023-12-01", "2023-12-08", "2023-12-25",
+        "2024-01-01", "2024-04-25", "2024-05-01", "2024-06-10", "2024-07-01", "2024-08-15", "2024-08-21", "2024-10-05", "2024-11-01", "2024-12-01", "2024-12-08", "2024-12-25",
+        "2025-01-01", "2025-04-25", "2025-05-01", "2025-06-10", "2025-07-01", "2025-08-15", "2025-08-21", "2025-10-05", "2025-11-01", "2025-12-01", "2025-12-08", "2025-12-25",
+        "2026-01-01", "2026-04-25", "2026-05-01", "2026-06-10", "2026-07-01", "2026-08-15", "2026-08-21", "2026-10-05", "2026-11-01", "2026-12-01", "2026-12-08", "2026-12-25",
+        "2027-01-01", "2027-04-25", "2027-05-01", "2027-06-10", "2027-07-01", "2027-08-15", "2027-08-21", "2027-10-05", "2027-11-01", "2027-12-01", "2027-12-08", "2027-12-25",
+        "2028-01-01", "2028-04-25", "2028-05-01", "2028-06-10", "2028-07-01", "2028-08-15", "2028-08-21", "2028-10-05", "2028-11-01", "2028-12-01", "2028-12-08", "2028-12-25",
+        "2029-01-01", "2029-04-25", "2029-05-01", "2029-06-10", "2029-07-01", "2029-08-15", "2029-08-21", "2029-10-05", "2029-11-01", "2029-12-01", "2029-12-08", "2029-12-25",
+        "2030-01-01", "2030-04-25", "2030-05-01", "2030-06-10", "2030-07-01", "2030-08-15", "2030-08-21", "2030-10-05", "2030-11-01", "2030-12-01", "2030-12-08", "2030-12-25"];
+    const festivosPortugalLisboa = [
+        "2023-01-01", "2023-04-25", "2023-05-01", "2023-06-10", "2023-08-15", "2023-10-05", "2023-11-01", "2023-12-01", "2023-12-08", "2023-12-25",
+        "2024-01-01", "2024-04-25", "2024-05-01", "2024-06-10", "2024-08-15", "2024-10-05", "2024-11-01", "2024-12-01", "2024-12-08", "2024-12-25",
+        "2025-01-01", "2025-04-25", "2025-05-01", "2025-06-10", "2025-08-15", "2025-10-05", "2025-11-01", "2025-12-01", "2025-12-08", "2025-12-25",
+        "2026-01-01", "2026-04-25", "2026-05-01", "2026-06-10", "2026-08-15", "2026-10-05", "2026-11-01", "2026-12-01", "2026-12-08", "2026-12-25",
+        "2027-01-01", "2027-04-25", "2027-05-01", "2027-06-10", "2027-08-15", "2027-10-05", "2027-11-01", "2027-12-01", "2027-12-08", "2027-12-25",
+        "2028-01-01", "2028-04-25", "2028-05-01", "2028-06-10", "2028-08-15", "2028-10-05", "2028-11-01", "2028-12-01", "2028-12-08", "2028-12-25",
+        "2029-01-01", "2029-04-25", "2029-05-01", "2029-06-10", "2029-08-15", "2029-10-05", "2029-11-01", "2029-12-01", "2029-12-08", "2029-12-25",
+        "2030-01-01", "2030-04-25", "2030-05-01", "2030-06-10", "2030-08-15", "2030-10-05", "2030-11-01", "2030-12-01", "2030-12-08", "2030-12-25"];
+    //automatic selector
+    const myInput = document.getElementById("selector");
+    myInput.addEventListener("change", function () {
+        add();
+    });
+    //Verificar anteriores req
+    var usedDays = 0
+    var usedDay
+    fetch('/Infoes/ShowSearchUserResultsToEdit?SearchUser=' + '@User.Identity?.Name', {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        var twentytwo = 22
+        for (let i = 0; i < data.length; i++) {
+            usedDay = twentytwo - data[i].days;
+            twentytwo -= usedDay;
+            usedDays += usedDay;
+        }
+        document.getElementById("days").value -= usedDays
+    })
+    .catch(error => console.error(error))
+
+
+    function toggleDiv() {
+        var div = document.getElementById("miDiv");
+        if (div.style.display === "none") {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+
+    //add() adiciona os dias selecionados
+    function add(){
+        //variaveis para verificar o dia da semana
+        var dataFixa = new Date(document.getElementById("selector").value);
+        var d = dataFixa.getDay();
+        //notificações
+        if (d==0 || d ==6){
+            document.getElementById("lookAtMe").value = "you can't choose a weekend day";
+        }        
+        else if (document.getElementById("selector").value == ""){
+            document.getElementById("lookAtMe").value = "enter a value in the calendar";
+        }
+        else if (document.getElementById("days").value <= 0){
+            document.getElementById("lookAtMe").value = "you don't have more days available";
+        }
+        else if (selector.value <= today) {
+            document.getElementById("lookAtMe").value = "you can't choose today's or previous date";
+        }
+        //parte para verificar feriados
+        if (document.getElementById("zone").value == "Madeira") {
+            for (var i = 0; i < festivosPortugalFunchal.length; i++) {
+                // Si el elemento actual es igual a x, mostramos un mensaje en la consola y salimos del ciclo
+                if (festivosPortugalFunchal[i] == selector.value) {
+                    document.getElementById("lookAtMe").value = "You can't choose a holiday";
+                    d = 0;
+                    break;
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < festivosPortugalLisboa.length; i++) {
+                // Si el elemento actual es igual a x, mostramos un mensaje en la consola y salimos del ciclo
+                if (festivosPortugalLisboa[i] == selector.value) {
+                    document.getElementById("lookAtMe").value = "You can't choose a holiday";
+                    d = 0;
+                    break;
+                }
+            }
+        }
+        //parte para adicionar as  
+        if ((document.getElementById("selector").value != "") && (selector.value > today) && (document.getElementById("days").value > 0) && (d != 0) && (d != 6)) {
+            //dia repetido
+            if (!array.includes(selector.value)){
+                date.value += selector.value + ", ";
+                array.push(selector.value);
+                days.value--;
+                document.getElementById("lookAtMe").value = "";
+            }
+            //dia repetido
+        }
+        return;
+    }
+
+    //del apaga tudo o conteudo
+    function del(){
+        date.value="";
+        array = [];//dia repetido
+        document.getElementById("days").value = 22 - usedDays;
+        document.getElementById("lookAtMe").value = "";
+        return;
+    }
+
+    //edit apaga só a ultima data inserida
+    function edit(){
+        if (document.getElementById("days").value < 22 - usedDays){
+            var nuevaCadena = date.value.substring(0, date.value.length - 12);
+            //yyyy=4 + mm=2 + dd=2 + -=2 + " "=2    -> 12
+            date.value = nuevaCadena;
+            document.getElementById("days").value++;
+            array.pop();//dia repetido
+            document.getElementById("lookAtMe").value = "";
+        }
+        return;
+    }
+
+    
+    
+</script>
+
+    
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+}

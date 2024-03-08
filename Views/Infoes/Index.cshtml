@@ -1,0 +1,376 @@
+﻿@model IEnumerable<FeriasApp.Models.Info>
+
+@{
+    ViewData["Title"] = "Index";
+    string info = "";
+    string[] miArray = { };
+    int days = 0;
+    int totalmarcado = 0;
+    int totalfalta = 0;
+}
+
+
+    
+    @foreach (var item in Model)
+    {
+        @if (item.Name == @User.Identity?.Name)
+        {
+            info= item.Requested;
+            miArray = info.Split(',');
+            days = miArray.Length - 1;
+            totalmarcado = totalmarcado + days;
+            totalfalta = 22 - totalmarcado;
+        }
+
+    }
+<div class="topindex">
+
+    
+    @if (totalmarcado == 0)
+    {
+        <h5>
+            <a asp-action="Create" class="btn btn-primary margintop atention">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+                Create New
+            </a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
+            </svg>
+            You can choose your days here
+        </h5>
+        <h5>Days still available to mark: 22</h5>
+        <button onclick="toggleDiv()" class="btn btn-secondary">Calendar</button>
+    }
+    else
+    {
+        <a asp-action="Create" class="btn btn-primary margintop">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+            </svg>
+            Create New
+        </a>
+        <h5>Marked days: @totalmarcado</h5>
+        <h5>Days still available to mark: @totalfalta</h5>
+        <button onclick="toggleDiv()" class="btn btn-secondary">Calendar</button>
+    }
+    
+</div>
+<div id="miDiv" style="display: none;">
+    <div class="topindex">
+        <iframe src="https://calendar.google.com/calendar/embed?height=400&wkst=1&bgcolor=%233F51B5&ctz=Europe%2FLisbon&showTz=1&showTitle=0&showNav=1&showPrint=1&showTabs=1&showCalendars=0&hl=en_GB&src=aHQzamxmYWFjNWxmZDYyNjN1bGZoNHRxbDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZXMucG9ydHVndWVzZSNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23B39DDB&color=%230B8043" style="border-radius:10px; color:white" width="900" height="400" frameborder="100" scrolling="no"></iframe>
+    </div>
+</div>
+
+
+
+
+<form method="get" asp-action="Index">
+    <div class="filter">
+        <select type="search" value=" @ViewData[" Getemployeedetails"]" name="Empsearch" class="form-control filterselector">
+            <option value="*">All Status</option>
+            <option value="Confirmed">Confirmed Status</option>
+            <option value="Denied"> Denied Status</option>
+            <option value="waiting confirmation">Pending Status</option>
+        </select>
+        <button type="submit"/ value="Search" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+            </svg>
+        </button>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+           @if (@User.Identity?.Name == "admin@tech.unipartner.com")
+            {
+                <th class="toptable">
+                    <h4>
+                        @Html.DisplayNameFor(model => model.Name) and dates
+                    </h4>
+                
+                </th>
+            }
+            else
+            {
+                <th class="toptable">
+                    <h4>
+                        Dates
+                    </h4>
+                </th>
+            }
+
+            <th class="toptable">
+                <h4>
+                    @Html.DisplayNameFor(model => model.Days)
+                </h4>
+            </th>
+            @if (@User.Identity?.Name == "admin@tech.unipartner.com")
+                {
+                <th class="toptable">
+                    <h4>Reply</h4>
+                </th>
+                <th class="toptable">
+                    <h4>Status</h4>
+                </th>
+            }
+            else
+            {
+                <th class="toptable">
+                    <h4>Actions</h4>
+                </th>
+                <th class="toptable">
+                    <h4>status</h4>
+                </th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) 
+    {
+            //admin@tech.unipartner.com
+        @if (@User.Identity?.Name == "admin@tech.unipartner.com")
+        {
+                <tr class="centerbuttons">
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn namedates">
+                            <p><b>@Html.DisplayFor(modelItem => item.Name)    </b> </p>
+                            @{
+                                string[] arraydatas = item.Requested.Split(',');
+                            }
+                            @foreach (string datas in arraydatas)
+                            {
+                                <li style="list-style-type:none">@datas</li>
+                            }
+                        </a>
+                        
+
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn">
+                            @{
+                                string requested = item.Requested;
+                                string[] requestedArray = requested.Split(',');
+                                int size = requestedArray.Length - 1;
+                            }
+                            @size
+                    </a>
+                </td>
+                <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-dark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                            Reply
+                        </a>
+                        <button onclick="StatusChangerAllow('@item.Name','@item.Id')" class="btn btn-outline-success" asp-controller="Home" asp-action="Index">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z" />
+                            </svg>
+                            Confirm
+                        </button>
+                        <button onclick="StatusChangerDeny('@item.Name','@item.Id')" class="btn btn-outline-danger" asp-controller="Home" asp-action="Index">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-octagon" viewBox="0 0 16 16">
+                                <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z" />
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                            Deny
+                        </button>
+
+                        @if (item.Name == @User.Identity?.Name)
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                                    <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z" />
+                                </svg>
+                                Delete
+                            </a>
+                        }
+                </td>
+                <td>
+                        @if (item.Confirmed == "Confirmed")
+                        {
+                            <h4 class="status">Confirm</h4>
+                        }
+                        else if (item.Confirmed == "Denied")
+                        {
+                            <h4 class="status2">Denied</h4>
+                        }
+                        else if (item.Confirmed == "waiting confirmation")
+                        {
+                            <h4 class="status3">Pending</h4>
+                        }
+                        else
+                        {
+                            <h4 class="status4">Note</h4>
+                        }
+                </td>
+                
+            </tr>
+        }
+        //se pretende fazer um else if
+        //so mostra a informação do user que fez login
+        @if (item.Name == @User.Identity?.Name && @User.Identity?.Name != "admin@tech.unipartner.com")
+        {
+            <tr>
+                <td>
+                        <div class="btn namedatesuser">
+                            <p>@Html.DisplayFor(modelItem => item.Requested)    </p>
+                        </div>
+                </td>
+                <td class="toptable">
+                        @{
+                            string requested = item.Requested;
+                            string[] requestedArray = requested.Split(',');
+                            int size = requestedArray.Length-1;
+                        }
+                        @size
+                </td>
+                <td>
+                    <div class="row">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                </svg>
+                                Edit
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                                Details
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                                    <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z" />
+                                </svg>
+                                Delete
+                            </a>
+                    </div>
+
+                </td>
+                <td>
+                        @if (item.Confirmed == "Confirmed")
+                        {
+                            <a style="color:black" href="https://www.skyscanner.com"><p class="confirmed"><b>Confirmed</p></a>
+                        }
+                        @if (item.Confirmed == "Denied")
+                        {
+                            <p class="denied"><b>Denied</b> </p>
+                        }
+                        @if (item.Confirmed == "waiting confirmation")
+                        {
+                            <p class="waiting"><b>Waiting confirmation</b> </p>
+                        }
+                        @if ((item.Confirmed != "Confirmed") && (item.Confirmed != "Denied") && (item.Confirmed != "waiting confirmation"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" style="color:black"><p class="note"> <b><u>Read note</u> </b></p></a>
+                        }
+                </td>
+            </tr>
+
+        }
+    }
+    </tbody>
+</table>
+
+
+<script>
+    //debugger;
+
+    function toggleDiv() {
+      var div = document.getElementById("miDiv");
+      if (div.style.display === "none") {
+        div.style.display = "block";
+      } else {
+        div.style.display = "none";
+      }
+    }
+
+    function StatusChangerAllow(user,id) {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("ShowSearchUserResultsToEdit", "Infoes")',
+            type: 'GET',
+            data: { SearchUser: user },
+            success: function (result) {
+                //solo verificadores, este codigo despues se comenta o se borra
+                for (let i = 0; i < result.length; i++) {
+                    debugger;
+                    if (id == result[i].id){
+                        const id = result[i].id;
+                        const miObjeto = {
+                            id: result[i].id,
+                            name: result[i].name,
+                            requested: result[i].requested,
+                            confirmed: "Confirmed",
+                            days: result[i].days,
+                            zone: result[i].zone
+                        }
+                        editar(id,miObjeto);
+                    }
+                };
+                
+            },
+            error: function () {
+                alert('Error al obtener la información.');
+            }
+        });
+        
+    }
+    function StatusChangerDeny(user,id) {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("ShowSearchUserResultsToEdit", "Infoes")',
+            type: 'GET',
+            data: { SearchUser: user },
+            success: function (result) {
+                //solo verificadores, este codigo despues se comenta o se borra
+                for (let i = 0; i < result.length; i++) {
+                    debugger;
+                    if (id == result[i].id) {
+                        const id = result[i].id;
+                        const miObjeto = {
+                            id: result[i].id,
+                            name: result[i].name,
+                            requested: result[i].requested,
+                            confirmed: "Denied",
+                            days: result[i].days,
+                            zone: result[i].zone
+                        }
+                        editar(id, miObjeto);
+                    }
+                };
+
+            },
+            error: function () {
+                alert('Error al obtener la información.');
+            }
+        });
+        
+    }
+
+    function editar(id, miObjeto) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("EditIndex", "Infoes")',
+            data: miObjeto,
+            success: function (result) {
+                location.reload();
+            },
+            error: function () {
+                alert("Ocurrió un error al realizar la operación.");
+            }
+        });
+    }
+
+</script>
